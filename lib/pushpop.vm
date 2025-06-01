@@ -1,0 +1,17 @@
+push argument 10
+push local 20
+push static 30
+push constant 40
+push this 50
+push that 60
+push pointer 0
+push pointer 1
+
+pop argument 10
+pop local 20
+pop static 30
+pop constant 40
+pop this 50
+pop that 60
+pop pointer 0
+pop pointer 1
