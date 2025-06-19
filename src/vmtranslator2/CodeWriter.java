@@ -137,8 +137,8 @@ public class CodeWriter {
             """);
         if (sysInit) { // sys.init: call sys.init 0 arguments
             this.fileName = "sys";
-            //writeCall("init", 0);
-            //writeReturn();
+            writeCall("init", 0);
+            writeReturn();
             this.fileName = "";
         }
     }

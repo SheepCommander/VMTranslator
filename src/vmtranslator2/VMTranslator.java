@@ -61,20 +61,22 @@ public class VMTranslator {
                         codeWriter.writePushPop(cType, parser.arg1(), Integer.parseInt(parser.arg2()));
                     case C_PUSH ->
                         codeWriter.writePushPop(cType, parser.arg1(), Integer.parseInt(parser.arg2()));
-                    case C_CALL ->
-                        codeWriter.writeArithmetic(parser.arg1());
-                    case C_FUNCTION ->
-                        codeWriter.writeArithmetic(parser.arg1()); 
-                    case C_GOTO ->
-                        codeWriter.writeArithmetic(parser.arg1()); 
-                    case C_IF ->
-                        codeWriter.writeArithmetic(parser.arg1());
                     case C_LABEL ->
-                        codeWriter.writeArithmetic(parser.arg1()); 
+                        codeWriter.writeLabel(parser.arg1()); 
+                    case C_GOTO ->
+                        codeWriter.writeGoto(parser.arg1());
+                    case C_IF ->
+                        codeWriter.writeIf(parser.arg1());
+                    case C_CALL ->
+                        codeWriter.writeCall(parser.arg1(), Integer.parseInt(parser.arg2()));
                     case C_RETURN ->
-                        codeWriter.writeReturn(); 
+                        codeWriter.writeReturn();
+                    case C_FUNCTION ->
+                        codeWriter.writeFunction(parser.arg1(), Integer.parseInt(parser.arg2()));
                 }
             }
         }
+        // Finish processing and close the ouptut stream!
+        codeWriter.close();
     }
 }
