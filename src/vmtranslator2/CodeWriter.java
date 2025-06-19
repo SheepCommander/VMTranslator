@@ -149,7 +149,7 @@ public class CodeWriter {
 
     /** Writes ASM code that effects the if-goto command. */
     public void writeIf(String label) {
-        output.printf("// writeIf()");
+        output.printf("// writeIf()\n");
         output.printf("""
                 @SP
                 AM=M-1
@@ -171,7 +171,7 @@ public class CodeWriter {
             goto f                  // Transfer control
         (return-address)        // eventually return
         */
-        
+        output.printf("// writeCall()\n");
     }
 
     /** Writes ASM code that effects the return command. */
@@ -186,12 +186,79 @@ public class CodeWriter {
             LCL = *(FRAME - 4)      // Restore LCL
             goto RET            // Goto return-address (in the Caller's code)
         */
+        output.print("// writeReturn()\n");
+        // FRAME = R13 = LCL
+        output.print("""
+                @LCL
+                D=M
+                @R13
+                M=D
+                """);
+        // RETURN_ADDRESS = R14 = *(LCL - 5)
+        output.print("""
+                @5
+                A=D-A
+                D=M
+                @R14
+                M=D
+                """);
+        // *ARG = pop()
+        output.print("""
+                @SP
+                AM=M-1
+                D=M
+                @ARG
+                A=M
+                M=D
+                """);
+        // SP = ARG+1
+        output.print("""
+                @ARG
+                D=M+1
+                @SP
+                M=D
+                """);
+        // THAT = *(FRAME - 1)
+        output.print("""
+                @R13
+                AM=M-1
+                D=M
+                @THAT
+                M=D
+                """);
+        output.print("""
+                @R13
+                AM=M-1
+                D=M
+                @THIS
+                M=D
+                """);
+        output.print("""
+                @R13
+                AM=M-1
+                D=M
+                @ARG
+                M=D
+                """);
+        output.print("""
+                @R13
+                AM=M-1
+                D=M
+                @LCL
+                M=D
+                """);
+        // goto RET
+        output.print("""
+                @R14
+                A=M
+                0;JMP
+                """);
     }
     
     /** Writes ASM code that effects the function command. */
     public void writeFunction(String functionName, int numLocals) {
-        output.printf("// function %s %d\n", functionName, numLocals);
-        output.printf("(%s.%s)\n", this.fileName, functionName); // class Foo method bar: Foo.bar
+        output.printf("// writeFunction() %s %d\n", functionName, numLocals);
+        output.printf("(%s)\n", functionName);
 
         // Set all local variables to 0 by pushing 0 numLocals times
         for (int i=0; i<numLocals; i++) {
