@@ -118,8 +118,7 @@ public class Parser {
             return command; // Return the Arithmetic command itself.
         if (command.indexOf(" ") != command.lastIndexOf(" ")) // Command has two arguments
             return command.substring(command.indexOf(" ") + 1, command.lastIndexOf(" "));
-
-        // Command has one argument
+        // else: Command has one argument
         return command.substring(command.indexOf(" ") + 1, command.length());
     }
 

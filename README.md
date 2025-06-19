@@ -203,17 +203,17 @@ pop static {index} // index + 16
 
 
 label {symbol} //// BRANCHING COMMANDS
-    (function.label)
+    (function$label)
 
 goto {symbol}
-    @function.label
+    @function$label
     0;JMP
 
 if-goto {symbol}
     @SP
     AM=M-1
     D=M
-    @function.label
+    @function$label
     D;JLT
 
 
@@ -261,3 +261,19 @@ avg(x, y, z)
         @avg
         0;JMP
         (return_address)# VMTranslator
+
+---
+
+BOOTSTRAP CODE (just like Java!)
+- main method required
+- set stack pointer to 256
+    @256
+    D=A
+    @SP
+    M=D
+- sys.init
+    call main
+    return
+    @END
+    (END)z
+    0;JMP
