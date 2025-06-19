@@ -16,10 +16,13 @@ public class VMTranslator {
         // Arguments
         String filePath = args[0];
         boolean sysInit = true;
+        boolean comments = true;
         for (String arg : args)
             switch (arg) {
                 case "-noSysInit" -> sysInit = false;
-                case "-n" -> sysInit = false;
+                case "-nS" -> sysInit = false;
+                case "-noComments" -> comments = false;
+                case "-nC" -> comments = false;
             }
 
         // Prepare Input & Output files

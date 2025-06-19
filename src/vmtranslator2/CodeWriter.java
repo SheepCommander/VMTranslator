@@ -208,6 +208,7 @@ public class CodeWriter {
 
     /** Writes ASM code that effects the return command. */
     public void writeReturn() {
+        output.println("// writeReturn()");
         // With the way our writeCall() works, our function took up a chunk of the stack to free up some space for the pointers
         // When we return, it's our job to restore everything to how it was pre-call
         // First lets throw LCL (which stores the "base address" of the function's local variables) into temp storage (R13)
