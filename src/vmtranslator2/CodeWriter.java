@@ -93,28 +93,14 @@ public class CodeWriter {
                 AM=M-1
                 D=M
                 A=A-1
-                D=D&M
-                M=-1
-                @Unique_Label
-                D+1;JEQ
-                @SP
-                A=M-1
-                M=0
-                (Unique_Label)
+                M=D&M
                 """);
         arithmeticTL.put("or", """
                 @SP
                 AM=M-1
                 D=M
                 A=A-1
-                D=D|M
-                M=-1
-                @Unique_Label
-                D+1;JEQ
-                @SP
-                A=M-1
-                M=0
-                (Unique_Label)
+                M=D|M
                 """);
         arithmeticTL.put("not", """
                 @SP
@@ -129,7 +115,7 @@ public class CodeWriter {
     }
     /** MUST GO FIRST: Sets Stack Pointer to 256 and calls sysInit if {@code sysInit} is true. */
     public void writeInit(boolean sysInit) {
-        output.println("""
+        output.print("""
             @256
             D=A
             @SP
