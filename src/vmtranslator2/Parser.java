@@ -50,8 +50,11 @@ public class Parser {
 
     /** Read next command & make it the current command. Only call if {@link #hasMoreCommands} is true. */
     public void advance() {
-        currentCommand = commands.get(currentIndex);
-        currentIndex++;
+        this.currentIndex++;
+        this.currentCommand = this.commands.get(currentIndex);
+        this.currentCommand = currentCommand
+                .substring(0,(currentCommand.contains("//") ? currentCommand.indexOf("//") : currentCommand.length()))
+                .trim();
     }
 
     /** Returns the type of the current VM command. */

@@ -6,12 +6,18 @@
     "configurations": [
         {
             "type": "java",
+            "name": "VMTranslator",
+            "request": "launch",
+            "mainClass": "vmtranslator2.VMTranslator",
+            "projectName": "VMTranslator_edafbf11"
+        },
+        {
+            "type": "java",
             "name": "Launch with Arguments Prompt",
             "request": "launch",
             "mainClass": "",
             "args": "${command:SpecifyProgramArgs}"
         },
-
         {
             "type": "java",
             "name": "Current File",
