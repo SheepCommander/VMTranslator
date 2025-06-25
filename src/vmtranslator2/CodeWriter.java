@@ -18,6 +18,7 @@ public class CodeWriter {
     private int simpleLabelI;
     // Function / Program flow translation
     private String lastFunctionName; // the last function defined by a `function f n` command
+    private int returnLabelCounter = 0;
 
     /** Opens the output file (only needs to be done ONCE) and gets ready to write into it. */
     public CodeWriter(String outputFile) throws FileNotFoundException {
@@ -124,10 +125,7 @@ public class CodeWriter {
             M=D
             """);
         if (sysInit) { // sys.init: call sys.init 0 arguments
-            this.fileName = "sys";
-            writeCall("init", 0);
-            writeReturn();
-            this.fileName = "";
+            writeCall("Sys.init", 0);
         }
     }
 
@@ -171,7 +169,49 @@ public class CodeWriter {
             goto f                  // Transfer control
         (return-address)        // eventually return
         */
-        output.printf("// writeCall()\n");
+        output.printf("// writeCall() %s %d\n", functionName, numArgs);
+        // Generate a unique return address label.
+        String returnLabel = functionName + "$ret." + returnLabelCounter++;
+
+        // Step 1: Push the return address onto the stack.
+        output.println("// call " + functionName + " " + numArgs);
+        output.println("@" + returnLabel);
+        output.println("D=A");
+        pushDToStack();
+
+        // Step 2 & 3: Push LCL, ARG, THIS, THAT of the caller.
+        push("LCL");
+        push("ARG");
+        push("THIS");
+        push("THAT");
+
+        // Step 4: Reposition ARG for the callee: ARG = SP - numArgs - 5.
+        output.println("@SP");
+        output.println("D=M");
+        output.println("@" + (numArgs + 5));
+        output.println("D=D-A");
+        output.println("@ARG");
+        output.println("M=D");
+
+        // Step 5: Reposition LCL for the callee: LCL = SP.
+        output.println("@SP");
+        output.println("D=M");
+        output.println("@LCL");
+        output.println("M=D");
+
+        // Step 6: Transfer control to the function.
+        output.println("@" + functionName);
+        output.println("0;JMP");
+
+        // Step 7: Declare the return label.
+        output.println("(" + returnLabel + ")");
+    }
+    // Helper method to push the value in D register onto the stack.
+    private void pushDToStack() {
+        output.println("@SP");
+        output.println("M=M+1");
+        output.println("A=M-1");
+        output.println("M=D");
     }
 
     /** Writes ASM code that effects the return command. */
