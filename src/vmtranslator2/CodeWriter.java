@@ -129,7 +129,6 @@ public class CodeWriter {
         }
     }
 
-
     /** Writes ASM code that effects the label command. */
     public void writeLabel(String label) {
         output.printf("// writeLabel()\n");
@@ -327,7 +326,8 @@ public class CodeWriter {
                 case "local" -> push("LCL", index);
                 case "this" -> push("THIS", index);
                 case "that" -> push("THAT", index);
-                case "static" -> push("" + (index + 16));
+                case "static" -> push(fileName + "." + index);
+
                 case "constant" -> pushConstant(index);
                 case "pointer" -> {
                     if (index == 0) push("THIS");
@@ -342,7 +342,7 @@ public class CodeWriter {
                 case "local" -> pop("LCL", index);
                 case "this" -> pop("THIS", index);
                 case "that" -> pop("THAT", index);
-                case "static" -> pop("" + (index+16));
+                case "static" -> pop(fileName + "." + index);
                 case "pointer" -> {
                     if (index == 0) pop("THIS");
                     if (index == 1) pop("THAT");
